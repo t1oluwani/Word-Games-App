@@ -1,0 +1,20 @@
+## Words Games App (Wordle + Hangman)
+
+**Proposal:** ....
+
+## Current Tasks
+- Implement GUI
+- Change method of accessing words from load file to usign python library
+- implement word option categories such as countries, foods, random and etc
+- score system, using attmepts taken
+- implement going back and exiting at anytime
+
+## How to Install
+...
+
+## How to Use
+...
+
+## Citations
+- Extendind MutableSet:
+- https://docs.python.org/2/library/collections.html#collections-abstract-base-classes
