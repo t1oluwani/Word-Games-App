@@ -114,7 +114,7 @@ class WordGame:
         # Initialize game using self.words
         self.game = Game(self.words)
         self.letters = len(self.game.answer()) # reassign value to letter to length of answer word
-        self.score = 1000*  
+        self.score = 1000*200
         self.correct = "_"*self.letters
         
         # Make an attempt

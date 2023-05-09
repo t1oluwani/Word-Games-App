@@ -3,11 +3,14 @@
 **Proposal:** ....
 
 ## Current Tasks
-- Implement GUI
+- Split classes into sperate classes
+- Finish Hangman implementation
+- Update READMe into proper ReadMe
 - Change method of accessing words from load file to usign python library
-- implement word option categories such as countries, foods, random and etc
+- Implement word option categories such as countries, foods, random and etc
 - score system, using attmepts taken
-- implement going back and exiting at anytime
+- Implement going back and exiting at anytime
+- Implement GUI
 
 ## How to Install
 ...
