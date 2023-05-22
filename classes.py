@@ -46,6 +46,29 @@ class Words(MutableSet):
     def discard(self, word):
         ''' Removes word from words set.'''
         self.words.discard(word.upper())
+        
+    def check_appropriate(self, word):
+        '''HELPER FUNCTION: Raises error is word is inappropriate (curse word, slur or vulgar)'''
+        if self.letters == 0:
+            with open('inappropriate_words.txt', 'r') as file:
+                for line in file:
+                    # Extract the first word from the line
+                    bad_word = line.strip().split()[0]
+                    
+                    if word == bad_word:
+                        raise InnapropriateWordError ("Word is a slur or vulgar")
+                        
+        else:
+            with open('inappropriate_words.txt', 'r') as file:
+                for line in file:
+                    # Extract the first word from the line
+                    bad_word = line.strip().split()[0]
+                    
+                    # Checks bad words the same size as self.letters
+                    if len(bad_word) == self.letters:
+                        if word == bad_word:
+                            raise InnapropriateWordError ("Word is a slur or vulgar")
+                    
 
     def check_letter(self, letter):
         '''HELPER FUNCTION: Raises error if letter isn't alphabetic'''
@@ -56,8 +79,7 @@ class Words(MutableSet):
         '''
         Raises error if word isn't valid, word is valid if:
         - if word is the incorrect length (> or < self.letters)
-        - if word is an inappropriate word or slur TODO
-        - if word follows the rules of... TODO
+        - if word is an inappropriate word or slur
         - only contains alphabetic letters
         '''
         if len(word) < self.letters:
@@ -65,8 +87,7 @@ class Words(MutableSet):
         elif len(word) > self.letters:
             raise TooLongError("Word is too long")
         else:
-            # check_appropriate
-            # check_......
+            self.check_appropriate(word)
             for letter in word:
                 self.check_letter(letter)
 
