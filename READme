@@ -3,7 +3,7 @@
 **Proposal:** ....
 
 ## Current Tasks
-- Split classes into sperate classes
+- Prevent the useof bad words
 - Finish Hangman implementation
 - Update READMe into proper ReadMe
 - Change method of accessing words from load file to usign python library
@@ -21,3 +21,5 @@
 ## Citations
 - Extendind MutableSet:
 - https://docs.python.org/2/library/collections.html#collections-abstract-base-classes
+- Contents of <inappropriate_words.txt> sourced from:
+- https://www.noswearing.com/dictionary

@@ -8,7 +8,7 @@ from classes import NotAlphaError
 class WordGame:
     '''
     This class initializes the components that a word game would need to work
-    such as selected a word to use, comparing it with the players guess and etc
+    such as selecting the answer word, comparing it with the players guess and etc
     '''
     def __init__(self):
         self.misplaced = ''

@@ -11,19 +11,25 @@ class TooLongError(ValueError):
 class NotAlphaError(ValueError):
     pass
 
+class InnapropriateWordError(ValueError):
+    pass
+
 class Words(MutableSet):
+    '''
+    Class that represents...
+    '''
 
     def __init__(self, letters):
-        '''Initialize empty set of words, letters refer to chosen lenght of words, if letters is 0 then length unspecified'''
+        '''Initialize empty set of words, letters refer to chosen length of words, if letters is 0 then length unspecified'''
         self.words = set() # initialized as a set to prevent word duplication
         self.letters = letters
 
     def __contains__(self, word):
-        ''' Returns True if the word is in the list, returns False otherwise.'''
+        ''' Returns True if the word is in the list, False otherwise.'''
         return word.upper() in self.words
 
     def __iter__(self):
-        ''' Returns an iterator over all the words.'''
+        ''' Returns an iterator over all the words in words.'''
         return iter(self.words)
 
     def __len__(self):
@@ -32,33 +38,37 @@ class Words(MutableSet):
 
     def add(self, word):
         '''
-        Adds word to the dictionary. Raises appropriate error if the word is 
-        too short, or too long, or containa anyhing other alphabetical letters.
+        Adds word to words set. Raises appropriate error if triggered.
         '''        
         self.check_word(word)
         self.words.add(word.upper())
 
     def discard(self, word):
-        ''' Removes word from set.'''
+        ''' Removes word from words set.'''
         self.words.discard(word.upper())
 
-    def check_letters(self, letter):
-        '''HELPER FUNCTION: Raises error if letter isn't in the alphabet'''
+    def check_letter(self, letter):
+        '''HELPER FUNCTION: Raises error if letter isn't alphabetic'''
         if not letter.isalpha():
             raise NotAlphaError ("Word contains letter not in the standard alphabet")
 
     def check_word(self, word):
         '''
-        Raises error if word doesn't only contains alphabetic letters 
-        or if word is the incorrect length (> or < self.letters)
+        Raises error if word isn't valid, word is valid if:
+        - if word is the incorrect length (> or < self.letters)
+        - if word is an inappropriate word or slur TODO
+        - if word follows the rules of... TODO
+        - only contains alphabetic letters
         '''
         if len(word) < self.letters:
             raise TooShortError("Word is too short")
         elif len(word) > self.letters:
             raise TooLongError("Word is too long")
         else:
+            # check_appropriate
+            # check_......
             for letter in word:
-                self.check_letters(letter)
+                self.check_letter(letter)
 
     def load_filtered(self, data):
         '''
@@ -83,15 +93,15 @@ class Words(MutableSet):
                 self.load_filtered(word_data)
 
     def words(self):
-        ''' Returns the number of letters in every word.(Should be same for every word)'''
+        ''' Returns set of words'''
         return self.words
 
     def letters(self):
-        ''' Returns the number of letters in every word.(Should be same for every word)'''
+        ''' Returns the number of letters every word should have'''
         return self.letters
 
     def copy(self):
-        ''' Returns second Words instance which contains the same words.(Shouldn't reload file)'''
+        ''' Returns second Words instance which contains same words'''
         new_instance = Words(self.letters)
         for word in self.words:
             new_instance.add(word)
@@ -101,7 +111,7 @@ class Words(MutableSet):
 class Attempt():
     def __init__(self, guess, answer):
         '''
-        Initializes guess with the players guess and the correct answer.
+        Initializes attempt with the players guess and the correct answer.
         '''
         self.guess = guess
         self.answer = answer
@@ -115,10 +125,10 @@ class Attempt():
         return self.answer
 
     def win(self):
-        ''' Returns True if players guess is the same as the answer.'''
+        ''' Returns True if the player has guessed correctly    '''
         return self.guess == self.answer
 
-    def correct(self): 
+    def fully_correct(self): 
         '''
         Returns a string that is the same length of the answer. Except consists
         of underscores everywhere except for where the player guessed correctly.
@@ -153,7 +163,7 @@ class Attempt():
         return guess_list, answer_list
         
 
-    def misplaced(self):
+    def partially_correct(self):
         '''
         Returns a ------ string that contains every letter which the player 
         guessed that is also in the answer, but not at the same position.
@@ -165,11 +175,10 @@ class Attempt():
         for letter in guess_list: 
             if letter in answer_list:
                 misplaced_str += letter
-        # return ''.join(sorted(misplaced_str))
         return ''.join(misplaced_str)
 
 
-    def incorrect(self):
+    def fully_wrong(self):
         '''
         Returns a ------ string that contains every letter which the player 
         guessed that was not in the answer at all. 
@@ -181,7 +190,6 @@ class Attempt():
         for letter in guess_list: 
             if not letter in answer_list:
                 incorrect_str += letter
-        # return ''.join(sorted(incorrect_str))
         return ''.join(incorrect_str)
 
 
