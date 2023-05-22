@@ -9,6 +9,7 @@
 - Update READMe into proper ReadMe
 - Change method of accessing words from load file to usign python library
 - Implement word option categories such as countries, foods, random and etc
+- Implement statistics and guess distribution
 - score system, using attmepts taken
 
 - Implement GUI
