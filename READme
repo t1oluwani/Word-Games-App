@@ -23,5 +23,5 @@
 ## Citations
 - Extendind MutableSet:
 - https://docs.python.org/2/library/collections.html#collections-abstract-base-classes
-- Contents of <inappropriate_words.txt> sourced from:
+- Contents of *inappropriate_words.txt* sourced from:
 - https://www.noswearing.com/dictionary
