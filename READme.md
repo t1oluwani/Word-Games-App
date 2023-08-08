@@ -13,10 +13,10 @@
 - ReUpdate READMe
 
 ## To Debug
-- play again shoul reset wordle stuff
-- exception for longest words 
-- rethink the way scores are calculated
-- find more edge cases (give to people to play)
+- 'play again' should reset wordle correct, misplaced, incorrect, etc...
+- create exception for longest words 
+- rethink the way scores are calculated and if they are necessary
+- find more edge cases (give to other people to test)
 
 
 ## How to Install
