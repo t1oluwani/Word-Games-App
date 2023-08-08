@@ -26,28 +26,12 @@ class WordGame:
                     return int(entry)
             except:
                 print("Please enter a valid whole number!")
-                
-    def get_guess(self):
-        ''' Returns players guess'''
-        while True:
-            entry = input("Make a "+str(self.letters)+" letter guess:\n")
-            if entry == 'esc':
-                self.game_over()
-            try:
-                self.words.check_word(entry)
-                return str(entry)
-            except TooShortError:
-                print("Word too Short! Please enter a "+str(self.letters)+" letter string!")
-            except TooLongError:
-                print("Word too Long! Please enter a "+str(self.letters)+" letter string!")
-            except NotAlphaError:
-                print("Word not alphabetic! Please enter a "+str(self.letters)+" letter string!")
-            except InnapropriateWordError:
-                print("Word in inappropriate! Please enter an appropriate "+str(self.letters)+" letter string (No cusses or slurs)!")
-                
+                            
     def merge_dash(self, dash_str1, dash_str2):
-        ''' Combines two partially dashed words eg. 
-        B _ _ _ + _ _ A T = B _ A T; B _ A T + _ O _ _ = B O A T'''
+        '''
+        HELPER FUNCTION: Combines two dash-hybrid words eg. 
+        B _ _ _ + _ _ A T = B _ A T; B _ A T + _ O _ _ = B O A T
+        '''
         result_str = ''
         for i in range(len(dash_str1)):
             if dash_str1[i] != "_":
@@ -57,56 +41,13 @@ class WordGame:
             else:
                 result_str += "_"
         return result_str
-        
-    def victory(self):
-        attempts = self.game.num_attempts()
-        if attempts == 1:
-            print("Congrats, you have won in "+str(attempts)+" try and with a perfect your score of", self.score)
-        else :
-            print("Congrats, you have won in "+str(attempts)+" tries, your score is", self.score)
-        # Asks user if they want to play again with a different word
-        self.play_again()
-    
             
     def game_over(self):
         print("Game Over!")
         print("The secret word was:", self.attempt.answer)
         print("Unfortunately, you couldn't get it this time.")
         print("Better luck next time!")
-
-        # Asks user if they want to play again with a different word
-        self.play_again()
-
-            
-    def make_attempt(self):
-        ''' Make an attempt by guessing a word of the required size'''
-        print("")
-        
-        self.guess = self.get_guess()
-        self.guess = self.guess.upper()
-        self.attempt = self.game.attempt(self.guess)
-        
-        self.correct_letters = self.merge_dash(self.correct_letters, self.attempt.fully_correct())
-        self.misplaced_pool += self.attempt.partially_correct()
-        self.misplaced_pool = "".join(sorted(set(self.misplaced_pool)))
-        self.incorrect_letters += self.attempt.fully_wrong()
-        self.incorrect_letters = "".join(sorted(set(self.incorrect_letters)))
-        
-        if self.attempt.success():
-            self.victory()
-        else:
-            self.score -= 50
-            self.feedback()
-            self.make_attempt()
-        
-        
-    def feedback(self):
-        print("Your Guess             :", self.guess)
-        print("Green Letters          :", self.correct_letters)
-        print("Yellow Letters         :", self.attempt.partially_correct())
-        print("Pool of Yellow Letters :", self.misplaced_pool)
-        print("Grey Letters           :", self.incorrect_letters)
-        
+        self.play_again() # Asks user if they want to play again with a different word    
         
     def play_again(self):
         ask = True
@@ -143,14 +84,13 @@ class WordGame:
         self.make_attempt()
 
 
+
 class Hangman(WordGame):
     '''
     This class extends WordGame and uses the Game, Words, and Attempt classes
     to create a Hangman user interface experience on the console
     '''
-    ...
-    
-    
+        
     def get_guess(self):
         ''' Returns players guess'''
         while True:
@@ -166,7 +106,6 @@ class Hangman(WordGame):
     def make_attempt(self):
         ''' Make an attempt by guessing a letter that may exist in answer word'''
         print("")
-        print(self.game.answer()) # DEBUG LINE
         
         self.guess = self.get_guess()
         self.guess = self.guess.upper()
@@ -190,14 +129,79 @@ class Hangman(WordGame):
     def feedback(self):
         print("Incorrect Attempts:", self.incorrect_letters)
         print(self.correct_letters)
+        
     
-
+    def victory(self):
+        attempts = len(self.incorrect_letters)
+        if attempts == 1:
+            print("Congrats, you have won in "+str(attempts)+" try and with a perfect your score of", self.score)
+        else :
+            print("Congrats, you have won in "+str(attempts)+" tries, your score is", self.score)
+        self.play_again() # Asks user if they want to play again with a different word
+    
+    
+    
 class Wordle(WordGame):
     '''
     This class extends WordGame and uses the Game, Words, and Attempt classes
     to create a Wordle user interface experience on the console
     '''
-    ...
+    
+    def get_guess(self):
+        ''' Returns players guess'''
+        while True:
+            entry = input("Make a "+str(self.letters)+" letter guess:\n")
+            if entry == 'esc':
+                self.game_over()
+            try:
+                self.words.check_word(entry)
+                return str(entry)
+            except TooShortError:
+                print("Word too Short! Please enter a "+str(self.letters)+" letter string!")
+            except TooLongError:
+                print("Word too Long! Please enter a "+str(self.letters)+" letter string!")
+            except NotAlphaError:
+                print("Word not alphabetic! Please enter a "+str(self.letters)+" letter string!")
+            except InnapropriateWordError:
+                print("Word in inappropriate! Please enter an appropriate "+str(self.letters)+" letter string (No cusses or slurs)!")
+    
+    def make_attempt(self):
+        ''' Make an attempt by guessing a word of the required size'''
+        print("")
+        
+        self.guess = self.get_guess()
+        self.guess = self.guess.upper()
+        self.attempt = self.game.attempt(self.guess)
+        
+        self.correct_letters = self.merge_dash(self.correct_letters, self.attempt.fully_correct())
+        self.misplaced_pool += self.attempt.partially_correct()
+        self.misplaced_pool = "".join(sorted(set(self.misplaced_pool)))
+        self.incorrect_letters += self.attempt.fully_wrong()
+        self.incorrect_letters = "".join(sorted(set(self.incorrect_letters)))
+        
+        if self.attempt.success():
+            self.victory()
+        else:
+            self.score -= 50
+            self.feedback()
+            self.make_attempt()
+        
+    def feedback(self):
+        print("Your Guess             :", self.guess)
+        print("Green Letters          :", self.correct_letters)
+        print("Yellow Letters         :", self.attempt.partially_correct())
+        print("Pool of Yellow Letters :", self.misplaced_pool)
+        print("Grey Letters           :", self.incorrect_letters)   
+        
+    def victory(self):
+        attempts = self.game.num_attempts()
+        if attempts == 1:
+            print("Congrats, you have won in "+str(attempts)+" try and with a perfect your score of", self.score)
+        else :
+            print("Congrats, you have won in "+str(attempts)+" tries, your score is", self.score)
+        self.play_again() # Asks user if they want to play again with a different word
+
+# MAIN FUNCTIONS \/
 
 def learn_rules():
     '''
@@ -277,7 +281,6 @@ def choose_game():
             start_game()
         else:
             print("Please enter a valid option!")
-
 
 def start_game():
     '''

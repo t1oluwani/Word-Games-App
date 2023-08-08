@@ -16,6 +16,7 @@
 - ReUpdate READMe
 
 ## To Debug
+- play again shoul reset wordle stuff
 - exception for longest words 
 - rethink the way scores are calculated
 - find more edge cases (give to people to play)
