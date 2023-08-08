@@ -191,7 +191,7 @@ class Wordle(WordGame):
         print("Green Letters          :", self.correct_letters)
         print("Yellow Letters         :", self.attempt.partially_correct())
         print("Pool of Yellow Letters :", self.misplaced_pool)
-        print("Grey Letters           :", self.incorrect_letters)   
+        print("Grey Letters           :", self.incorrect_letters)
         
     def victory(self):
         attempts = self.game.num_attempts()

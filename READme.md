@@ -5,6 +5,7 @@
 ## Current Tasks
 - Update READMe into proper ReadMe
 - Re-implement wordle into New York Times format (5 letter words 6 attempt is classic)
+- Implement statistics and guess distribution
 - Change method of accessing words from load file to using python library
 - Implement word option categories such as countries, foods, random and etc
 - Make possible to add own category (drop .txt file)
@@ -27,5 +28,5 @@
 ## Citations
 - Extendind MutableSet:
 - https://docs.python.org/2/library/collections.html#collections-abstract-base-classes
-- Contents of <inappropriate_words.txt> sourced from:
+- Contents of `inappropriate_words.txt` sourced from:
 - https://www.noswearing.com/dictionary
