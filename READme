@@ -3,15 +3,23 @@
 **Proposal:** ....
 
 ## Current Tasks
-- Implement score system for wordle
-- Implement going back 
+- Implement score system for wordle (using attempts taken)
 - Finish Hangman implementation
+- Finish Hangman information section
+- Rearranged class functions for proper polymorphism
 - Update READMe into proper ReadMe
-- Change method of accessing words from load file to usign python library
+- Re-implement wordle into New York Times format (5 letter words 6 attempt is classic)
+- Change method of accessing words from load file to using python library
 - Implement word option categories such as countries, foods, random and etc
-- score system, using attmepts taken
+- Make possible to add own category (drop .txt file)
+- Make wordle and hangman into GUI
+- ReUpdate READMe
 
-- Implement GUI
+## To Debug
+- exception for longest words 
+- rethink the way scores are calculated
+- find more edge cases (give to people to play)
+
 
 ## How to Install
 ...

@@ -5,11 +5,13 @@ from classes import TooShortError
 from classes import NotAlphaError
 from classes import InnapropriateWordError
 
+MAX_LETTERS = 13 # Max size of words
+
 class WordGame:
     '''
     This class initializes the components that a word game would need to work
     such as selecting the answer word, comparing it with the players guess and etc
-    '''
+    '''  
     def __init__(self):
         self.misplaced_pool = ''
         # self.displaced = ''
@@ -28,7 +30,7 @@ class WordGame:
     def get_guess(self):
         ''' Returns players guess'''
         while True:
-            entry = input("Enter a "+str(self.letters)+" letter word:\n")
+            entry = input("Make a "+str(self.letters)+" letter guess:\n")
             if entry == 'esc':
                 self.game_over()
             try:
@@ -44,7 +46,8 @@ class WordGame:
                 print("Word in inappropriate! Please enter an appropriate "+str(self.letters)+" letter string (No cusses or slurs)!")
                 
     def merge_dash(self, dash_str1, dash_str2):
-        ''' TOWRITE'''
+        ''' Combines two partially dashed words eg. 
+        B _ _ _ + _ _ A T = B _ A T; B _ A T + _ O _ _ = B O A T'''
         result_str = ''
         for i in range(len(dash_str1)):
             if dash_str1[i] != "_":
@@ -55,31 +58,29 @@ class WordGame:
                 result_str += "_"
         return result_str
         
-        
     def victory(self):
         attempts = self.game.num_attempts()
         if attempts == 1:
-            print("Congrats, you have won in "+str(attempts)+" try and with a perfect your score of ----")
+            print("Congrats, you have won in "+str(attempts)+" try and with a perfect your score of", self.score)
         else :
-            print("Congrats, you have won in "+str(attempts)+" tries, your score is ----")
+            print("Congrats, you have won in "+str(attempts)+" tries, your score is", self.score)
         # Asks user if they want to play again with a different word
         self.play_again()
     
             
     def game_over(self):
-        # score = ...
-        # if score == 0:
-        print("Game Over, your score has reached 0 and you have lost")
-        # else :
-        print("Game Over, unfortunately you have lost with a final score of ----")
+        print("Game Over!")
+        print("The secret word was:", self.attempt.answer)
+        print("Unfortunately, you couldn't get it this time.")
+        print("Better luck next time!")
+
         # Asks user if they want to play again with a different word
         self.play_again()
 
             
     def make_attempt(self):
-        ''' Make an attempt by guess a word of the required size'''
+        ''' Make an attempt by guessing a word of the required size'''
         print("")
-        print(self.game.answer()) # DEBUG LINE
         
         self.guess = self.get_guess()
         self.guess = self.guess.upper()
@@ -91,9 +92,10 @@ class WordGame:
         self.incorrect_letters += self.attempt.fully_wrong()
         self.incorrect_letters = "".join(sorted(set(self.incorrect_letters)))
         
-        if self.attempt.win():
+        if self.attempt.success():
             self.victory()
         else:
+            self.score -= 50
             self.feedback()
             self.make_attempt()
         
@@ -127,20 +129,18 @@ class WordGame:
         # Gets self.letters from player
         self.letters = self.get_letters()
         
-        # Load words to self.words
+        # Load words to self.words 
         self.words = Words(self.letters)
         self.words.load_file("words.txt") #replace w library
         
         # Initialize game using self.words
         self.game = Game(self.words)
         self.letters = len(self.game.answer()) # reassign value to letter to length of answer word
-        self.score = 1000*200
+        self.score = int (1000 + (500*(self.letters/MAX_LETTERS)))
         self.correct_letters = "_"*self.letters
         
         # Make an attempt
         self.make_attempt()
-
-    
 
 
 class Hangman(WordGame):
@@ -149,6 +149,48 @@ class Hangman(WordGame):
     to create a Hangman user interface experience on the console
     '''
     ...
+    
+    
+    def get_guess(self):
+        ''' Returns players guess'''
+        while True:
+            entry = input("Guess a letter:\n")
+            if entry == 'esc':
+                self.game_over()
+            try:
+                self.words.check_letter(entry)
+                return str(entry)
+            except NotAlphaError:
+                print("Word not alphabetic! Please enter a "+str(self.letters)+" letter string!")          
+    
+    def make_attempt(self):
+        ''' Make an attempt by guessing a letter that may exist in answer word'''
+        print("")
+        print(self.game.answer()) # DEBUG LINE
+        
+        self.guess = self.get_guess()
+        self.guess = self.guess.upper()
+        self.attempt = self.game.attempt(self.guess)
+        
+        self.correct_letters = self.merge_dash(self.correct_letters, self.attempt.exists_in())
+        self.incorrect_letters += self.attempt.not_exist_in()
+        self.incorrect_letters = "".join(sorted(set(self.incorrect_letters)))
+        
+        if self.attempt.success(self.correct_letters):
+            print(self.correct_letters)
+            self.victory() 
+        else:
+            self.score -= 50
+            self.attempt.hangman(len(self.incorrect_letters))
+            if len(self.incorrect_letters) > 6:
+                self.game_over()
+            self.feedback()
+            self.make_attempt()
+            
+    def feedback(self):
+        print("Incorrect Attempts:", self.incorrect_letters)
+        print(self.correct_letters)
+    
 
 class Wordle(WordGame):
     '''
@@ -168,11 +210,21 @@ def learn_rules():
         if entry[0] == "h":
             choosing = False
             print("""
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-            Proin egestas, sapien vel ornare vestibulum, felis urna 
-            volutpat tellus, in rutrum ex massa eu lorem. Cras at 
-            aliquam sem. Lorem ipsum dolor sit amet, consectetur 
-            adipiscing elit. Proin vel lorem at orci elementum.
+            Hangman is a classic word-guessing game where you have to guess a hidden word letter by letter. 
+            You have a limited number of attempts to guess the word correctly. To play, follow these steps:
+
+            1. Guess a letter that you think might be in the chosed word.
+            2. After each guess, you will receive feedback 
+                a correct guess will be revealed in its position in the word, 
+                an incorrect guess will cause more details to be added to your hangman
+                you have 7 attempts at guessing
+            3. Use the feedback to make educated guesses and deduce the word.
+            4. Repeat the cycle until one of the following occurs: 
+                you guess the entire word correctly and win, 
+                your hangman is fully drawn due to 7 attempts, or 
+                you choose to exit by pressing "esc" at any time to instantly lose.
+            5. Your goal is to guess the word with as few incorrect attempts as 
+                possible to achieve a high score.
                   """)
             start_game()
             
@@ -190,11 +242,13 @@ def learn_rules():
                 yellow for correct letters in the wrong position,
                 a pool of yellow letters accumulated so far and,
                 gray for incorrect letters. 
-            3. Utilize the feedback to make educated guesses and deduce the word.
+            3. Use the feedback to make educated guesses and deduce the word.
             4. Repeat the cycle until one of the following occurs: 
                 you guess the word correctly and win, 
                 your score reaches zero and you lose, or 
                 you choose to exit by pressing "esc" at any time to instantly lose. 
+            5. Your goal is to guess the word with as few incorrect attempts as 
+                possible to achieve a high score.
                   """)
             start_game()
             

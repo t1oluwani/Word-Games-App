@@ -129,7 +129,7 @@ class Words(MutableSet):
         return new_instance
 
 
-class Attempt():
+class WordAttempt():
     def __init__(self, guess, answer):
         '''
         Initializes attempt with the players guess and the correct answer.
@@ -145,7 +145,7 @@ class Attempt():
         ''' Returns the correct answer.'''
         return self.answer
 
-    def win(self):
+    def success(self):
         ''' Returns True if the player has guessed correctly    '''
         return self.guess == self.answer
 
@@ -156,7 +156,7 @@ class Attempt():
         (Green in Wordle) 
         '''
         result_str = ''
-        for i in range(len(self.guess)):
+        for i in range(len(self.answer)):
             if self.guess[i] == self.answer[i]:
                 result_str += self.guess[i]
             else:
@@ -213,6 +213,133 @@ class Attempt():
                 incorrect_str += letter
         return ''.join(incorrect_str)
 
+class LetterAttempt():
+    def __init__(self, guess, answer):
+        '''
+        Initializes attempt with the players guess and the answer word.
+        '''
+        self.guess = guess
+        self.answer = answer
+
+    def guess(self):
+        ''' Returns the guess that the player made.'''
+        return self.guess
+
+    def answer(self):
+        ''' Returns the correct answer.'''
+        return self.answer
+    
+    def success(self, current):
+        ''' Returns True if the player has guessed all the letters correctly'''
+        return current == self.answer
+
+    def exists_in(self): 
+        '''
+        Returns a string that is the same length of the answer. Except consists of 
+        underscores everywhere except for where the player hasn't yet guessed correctly. 
+        Everytime player guesses correct letter, underscore is replaced with the letter.
+        '''
+        result_str = ''
+        for i in range(len(self.answer)):
+            if self.guess == self.answer[i]:
+                result_str += self.guess
+            else:
+                result_str += "_"
+        return result_str
+    
+    def not_exist_in(self):
+        '''
+        Returns a char of a guess that a player made that was not in the answer at all. 
+        '''
+        if not self.guess in self.answer:
+            return self.guess
+        else:
+            return ''
+        
+    def hangman(self, case):
+        if   case <= 0:
+         print("""
+________
+|
+|
+|
+|
+|
+|
+_______________
+                  """)      
+        elif case == 1:
+            print("""
+________
+|
+|      O
+|
+|
+|
+|
+_______________
+                  """)
+        elif case == 2:
+            print("""
+________
+|
+|      O
+|      |
+|
+|
+|
+_______________                  """)
+        elif case == 3:
+            print("""
+________
+|
+|      O
+|     /|
+|
+|
+|
+_______________                  """)
+        elif case == 4:
+            print("""
+________
+|
+|      O
+|     /|\\
+|
+|
+|
+_______________                  """)
+        elif case == 5:
+            print("""
+________
+|
+|      O
+|     /|\\
+|     /
+|
+|
+_______________                  """)
+        elif case == 6:
+            print("""
+________
+|
+|      O
+|     /|\\
+|     / \\
+|
+|
+_______________                  """)
+        elif case >= 7:
+            print("""
+________
+|      |
+|      O
+|     /|\\
+|     / \\
+|
+|  Game Over
+_______________                  """)
+
 
 class Game():
     def __init__(self, words):
@@ -230,10 +357,14 @@ class Game():
 
     def attempt(self, players_guess):
         ''' 
-        Returns an Attempt instance object that represents the 
-        results of whatever guess the player makes.
+        Returns an WordAttempt instance or LetterAttempt instance, both objects that represents the results 
+        of whatever guess the player makes. WordAttempt for word guesses and LetterAttempt for letter guesses
         '''
         self.attempts += 1
-        return Attempt(players_guess, self.random_word)
+        if len(players_guess) > 1 :
+            return WordAttempt(players_guess, self.random_word)
+        else:
+            return LetterAttempt(players_guess, self.random_word)
+
     
 
