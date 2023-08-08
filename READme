@@ -3,10 +3,6 @@
 **Proposal:** ....
 
 ## Current Tasks
-- Implement score system for wordle (using attempts taken)
-- Finish Hangman implementation
-- Finish Hangman information section
-- Rearranged class functions for proper polymorphism
 - Update READMe into proper ReadMe
 - Re-implement wordle into New York Times format (5 letter words 6 attempt is classic)
 - Change method of accessing words from load file to using python library
